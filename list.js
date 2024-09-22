@@ -107,13 +107,14 @@ function saveChecked(list, checked) {
 // drawing
 
 function refresh() {
-    const addListButton = document.querySelector("#addListButton");
-    addListButton.onclick = function () {
-        const addListInput = document.querySelector("#addListInput");
-        addList(addListInput.value);
-        addListInput.value = '';
-        refresh();
-    }
+    const addListInput = document.querySelector("#addListInput");
+    addListInput.onkeyup = (event) => {
+        if (event.key === "Enter") {
+            addList(addListInput.value);
+            addListInput.value = '';
+            refresh();
+        }
+    };
 
     const lists = getLists();
     if (lists.size == 0) {
@@ -125,13 +126,12 @@ function refresh() {
 
     const addItemInput = document.querySelector("#addItemInput");
     addItemInput.setAttribute("placeholder", "add item to " + currList);
-
-    const addItemButton = document.querySelector("#addItemButton");
-    addItemButton.onclick = function () {
-        const addItemInput = document.querySelector("#addItemInput");
-        addItem(currList, addItemInput.value);
-        addItemInput.value = '';
-        refresh();
+    addItemInput.onkeyup = (event) => {
+        if (event.key === "Enter") {
+            addItem(currList, addItemInput.value);
+            addItemInput.value = '';
+            refresh();
+        }
     };
 
     const cleanButton = document.querySelector("#cleanButton");
@@ -184,7 +184,7 @@ function renderNoItems(lists, currList) {
     hide(document.querySelector("#listContainer"));
 
     show(document.querySelector("#addItemContainer"));
-    
+
     const actionTextContainer = document.querySelector("#actionTextContainer");
     actionTextContainer.innerHTML = "add an item to get started!";
     show(actionTextContainer);
