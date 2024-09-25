@@ -2,37 +2,35 @@
 <html>
 
 <head>
-    <title>lazy list - lazy.software</title>
+    <title>items [lazy list - lazy.software]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="new.css">
-    <script src="list.js"></script>
+    <script src="storage.js"></script>
+    <script src="items.js"></script>
 </head>
 
 <body>
     <div id="addItemContainer">
-        <input style="font-size:16px;width:100%" type="text" id="addItemInput">
-        <hr />
+        <input style="font-size:18px;width:100%" type="text" id="addItemInput">
     </div>
-    <p id="actionTextContainer" />
-    <table id="listContainer">
+    <p id="actionTextContainer"></p>
+    <table id="itemsContainer">
         <tbody>
         </tbody>
     </table>
-    <hr />
-    <div id="listActionContainer">
-        <button id="cleanButton" type="button">clean</button>
-        <button id="resetButton" type="button">reset</button>
-        <button id="deleteButton" type="button">delete</button>
+    <div id="itemsActionContainer">
+        <button id="uncheckButton" type="button">uncheck</button>
+        <button id="removeButton" type="button">remove</button>
+        <button id="removeAllButton" type="button">remove all</button>
+        <br /><br />
     </div>
-    <fieldset id="listsContainer">
-    </fieldset>
-    <div>
-        <input style="font-size:16px;width:100%" type="text" id="addListInput" placeholder="add list">
-    </div>
-    <div id="destroyButtonContainer">
-        <hr />
-        <button style="background:red" id="destroyButton" type="button">destroy</button>
-    </div>
+    <nav>
+        <a href="index.html">items</a>
+        &nbsp;&nbsp;
+        <a href="lists.html">lists</a>
+        &nbsp;&nbsp;
+        <a href="admin.html">admin</a>
+    </nav>
 </body>
 
 </html>
