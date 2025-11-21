@@ -12,7 +12,7 @@ A minimal, mobile-first Todo List PWA built with React, TypeScript, and Tailwind
 *   **Multiple Lists**: Organize your tasks into separate lists.
 *   **Alphabetical Sorting**: Lists and items are automatically sorted for you.
 *   **Persistence**: Data is saved automatically to your device's local storage.
-*   **Dark Mode**: (Coming soon... maybe. We're lazy.)
+*   **Dark Mode**: Automatic device-driven dark mode support.
 
 ## Tech Stack
 
@@ -34,8 +34,8 @@ A minimal, mobile-first Todo List PWA built with React, TypeScript, and Tailwind
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/lazy-list-ag.git
-    cd lazy-list-ag
+    git clone https://github.com/lazy-software/list.git
+    cd list
     ```
 
 2.  Install dependencies:
