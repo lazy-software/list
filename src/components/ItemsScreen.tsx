@@ -27,13 +27,13 @@ export function ItemsScreen({
     if (!activeList) {
         return (
             <div className="flex flex-col items-center justify-center h-[80vh] p-6 text-center">
-                <div className="bg-gray-100 p-6 rounded-full mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-full mb-4 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">No List Selected</h2>
-                <p className="text-gray-500">Go to the Lists tab to create or select a list.</p>
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">No List Selected</h2>
+                <p className="text-gray-500 dark:text-gray-400">Go to the Lists tab to create or select a list.</p>
             </div>
         );
     }
@@ -48,13 +48,13 @@ export function ItemsScreen({
                     value={newItemText}
                     onChange={(e) => setNewItemText(e.target.value)}
                     placeholder={`Add item to ${activeList.name}...`}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors placeholder-gray-400 dark:placeholder-gray-500"
                 />
             </form>
 
             <div className="space-y-2 mb-8">
                 {activeList.items.length === 0 ? (
-                    <p className="text-center text-gray-500 py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                    <p className="text-center text-gray-500 dark:text-gray-400 py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 transition-colors">
                         List is empty. Add an item above!
                     </p>
                 ) : (
@@ -62,17 +62,17 @@ export function ItemsScreen({
                         <label
                             key={item.id}
                             className={`flex items-center p-4 rounded-xl border transition-all cursor-pointer ${item.completed
-                                ? 'bg-gray-50 border-gray-200'
-                                : 'bg-white border-gray-200 hover:border-blue-300 shadow-sm'
+                                ? 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800'
+                                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 shadow-sm'
                                 }`}
                         >
                             <input
                                 type="checkbox"
                                 checked={item.completed}
                                 onChange={() => onToggleItem(item.id)}
-                                className="w-6 h-6 text-blue-600 border-gray-300 rounded focus:ring-blue-500 transition-colors"
+                                className="w-6 h-6 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 transition-colors"
                             />
-                            <span className={`ml-3 flex-1 text-lg ${item.completed ? 'text-gray-400 line-through' : 'text-gray-800'
+                            <span className={`ml-3 flex-1 text-lg ${item.completed ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-800 dark:text-gray-200'
                                 }`}>
                                 {item.text}
                             </span>
@@ -88,7 +88,7 @@ export function ItemsScreen({
                             onDeleteCompleted();
                         }
                     }}
-                    className="w-full py-3 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition-colors border border-red-100"
+                    className="w-full py-3 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg font-medium transition-colors border border-red-100 dark:border-red-900/30"
                 >
                     Remove {completedCount} Checked Item{completedCount !== 1 ? 's' : ''}
                 </button>
