@@ -47,8 +47,8 @@ function App() {
         </main>
 
         {/* Bottom Navigation */}
-        <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 }
