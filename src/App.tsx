@@ -25,7 +25,7 @@ function App() {
 
 
         {/* Main Content */}
-        <main className="pt-4">
+        <main className="pt-4 pb-32">
           {activeTab === 'items' ? (
             <ItemsScreen
               activeList={activeList}

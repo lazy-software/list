@@ -34,6 +34,7 @@ export function ListsScreen({
                     value={newListName}
                     onChange={(e) => setNewListName(e.target.value)}
                     placeholder="Create list..."
+                    enterKeyHint="done"
                     className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors placeholder-gray-400 dark:placeholder-gray-500"
                 />
             </form>
