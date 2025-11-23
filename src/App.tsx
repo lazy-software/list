@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTodoApp } from './hooks/useTodoApp';
 import { BottomNav } from './components/BottomNav';
 import { ListsScreen } from './components/ListsScreen';
@@ -7,6 +7,14 @@ import './App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState<'items' | 'lists'>('lists');
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
+
   const {
     lists,
     activeListId,
@@ -25,7 +33,7 @@ function App() {
 
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto pt-4">
+        <main ref={mainRef} className="flex-1 overflow-y-auto pt-4">
           {activeTab === 'items' ? (
             <ItemsScreen
               activeList={activeList}
