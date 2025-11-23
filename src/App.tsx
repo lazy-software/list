@@ -20,12 +20,12 @@ function App() {
   } = useTodoApp();
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 transition-colors duration-200">
-      <div className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen shadow-2xl relative transition-colors duration-200">
+    <div className="h-[100dvh] bg-gray-100 dark:bg-gray-950 transition-colors duration-200 flex flex-col overflow-hidden">
+      <div className="max-w-md mx-auto w-full h-full bg-white dark:bg-gray-900 shadow-2xl relative transition-colors duration-200 flex flex-col overflow-hidden">
 
 
         {/* Main Content */}
-        <main className="pt-4 pb-32">
+        <main className="flex-1 overflow-y-auto pt-4">
           {activeTab === 'items' ? (
             <ItemsScreen
               activeList={activeList}
@@ -47,8 +47,8 @@ function App() {
         </main>
 
         {/* Bottom Navigation */}
+        <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 }
