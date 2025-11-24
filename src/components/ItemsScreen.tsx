@@ -41,7 +41,7 @@ export function ItemsScreen({
     const completedCount = activeList.items.filter(i => i.completed).length;
 
     return (
-        <div className="p-4 pb-24 max-w-md mx-auto w-full">
+        <div className="p-4 pb-12 max-w-md mx-auto w-full">
             <form onSubmit={handleSubmit} className="mb-6">
                 <input
                     type="text"

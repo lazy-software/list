@@ -72,7 +72,7 @@ export function ListsScreen({
 
                             <button
                                 onClick={() => {
-                                    if (window.confirm('Are you sure you want to delete this list?')) {
+                                    if (window.confirm(`Are you sure you want to delete "${list.name}"?`)) {
                                         onDeleteList(list.id);
                                     }
                                 }}

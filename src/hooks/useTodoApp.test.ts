@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useTodoApp } from '../hooks/useTodoApp';
+import { useTodoApp } from './useTodoApp';
 
 describe('useTodoApp', () => {
     beforeEach(() => {
@@ -138,5 +138,22 @@ describe('useTodoApp', () => {
 
         // Check item sorting
         expect(result.current.activeList?.items.map(i => i.text)).toEqual(['Ant', 'Mango', 'Zebra']);
+    });
+
+    it('should sort items case-insensitively', () => {
+        const { result } = renderHook(() => useTodoApp());
+
+        act(() => {
+            result.current.addList('My List');
+        });
+
+        act(() => {
+            result.current.addItem('apple');
+            result.current.addItem('Banana');
+            result.current.addItem('cherry');
+        });
+
+        // Expect case-insensitive sorting: apple, Banana, cherry
+        expect(result.current.activeList?.items.map(i => i.text)).toEqual(['apple', 'Banana', 'cherry']);
     });
 });
