@@ -15,6 +15,7 @@ export default defineConfig({
         short_name: 'Lazy List',
         description: 'A minimal, lazy todo list app',
         theme_color: '#ffffff',
+        orientation: 'portrait',
         icons: [
           {
             src: 'icon-192.png',
