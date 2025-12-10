@@ -6,7 +6,7 @@ import { ItemsScreen } from './components/ItemsScreen';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'items' | 'lists'>('lists');
+  const [activeTab, setActiveTab] = useState<'items' | 'lists'>('items');
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
