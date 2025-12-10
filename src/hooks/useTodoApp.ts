@@ -99,6 +99,17 @@ export function useTodoApp() {
         }));
     };
 
+    const importList = (list: TodoList) => {
+        // Generate a new ID to avoid collisions if importing the same list multiple times
+        const newList = { ...list, id: crypto.randomUUID() };
+
+        setState(prev => ({
+            ...prev,
+            lists: [...prev.lists, newList],
+            activeListId: newList.id
+        }));
+    };
+
     const sortedLists = [...state.lists].sort((a, b) => a.name.localeCompare(b.name));
 
     const activeList = state.lists.find(l => l.id === state.activeListId) || null;
@@ -115,6 +126,7 @@ export function useTodoApp() {
         setActiveList,
         addItem,
         toggleItem,
-        deleteCompletedItems
+        deleteCompletedItems,
+        importList
     };
 }

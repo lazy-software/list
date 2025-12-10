@@ -24,7 +24,8 @@ function App() {
     setActiveList,
     addItem,
     toggleItem,
-    deleteCompletedItems
+    deleteCompletedItems,
+    importList
   } = useTodoApp();
 
   return (
@@ -50,6 +51,7 @@ function App() {
               onSelectList={(id) => {
                 setActiveList(id);
               }}
+              onImportList={importList}
             />
           )}
         </main>
