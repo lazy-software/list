@@ -6,7 +6,7 @@ import { ItemsScreen } from './components/ItemsScreen';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'items' | 'lists'>('lists');
+  const [activeTab, setActiveTab] = useState<'items' | 'lists'>('items');
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,7 +24,8 @@ function App() {
     setActiveList,
     addItem,
     toggleItem,
-    deleteCompletedItems
+    deleteCompletedItems,
+    importList
   } = useTodoApp();
 
   return (
@@ -50,6 +51,7 @@ function App() {
               onSelectList={(id) => {
                 setActiveList(id);
               }}
+              onImportList={importList}
             />
           )}
         </main>
