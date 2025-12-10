@@ -61,10 +61,66 @@ export function ListsScreen({
 
     return (
         <div className="p-4 pb-24 max-w-md mx-auto w-full">
+            <div className="mb-6 space-y-4">
+                {!isImporting ? (
+                    <>
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                type="text"
+                                value={newListName}
+                                onChange={(e) => setNewListName(e.target.value)}
+                                placeholder="Create list..."
+                                enterKeyHint="done"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors placeholder-gray-400 dark:placeholder-gray-500"
+                            />
+                        </form>
+                        <button
+                            onClick={() => setIsImporting(true)}
+                            className="text-sm text-blue-600 dark:text-blue-400 hover:underline w-full text-center"
+                        >
+                            Or import a list
+                        </button>
+                    </>
+                ) : (
+                    <form onSubmit={handleImport} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <input
+                            type="text"
+                            value={importString}
+                            onChange={(e) => setImportString(e.target.value)}
+                            placeholder="Paste shared list here..."
+                            className="w-full p-3 mb-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                        />
+                        {importError && (
+                            <p className="text-red-500 text-xs mb-3">{importError}</p>
+                        )}
+                        <div className="flex gap-2">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsImporting(false);
+                                    setImportString('');
+                                    setImportError('');
+                                }}
+                                className="flex-1 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={!importString.trim()}
+                                className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Import
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div>
+
             <div className="space-y-3">
                 {lists.length === 0 ? (
                     <p className="text-center text-gray-500 dark:text-gray-400 py-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 transition-colors">
-                        No lists yet. Create one below!
+                        No lists yet. Create one above!
                     </p>
                 ) : (
                     lists.map((list) => (
@@ -123,62 +179,6 @@ export function ListsScreen({
                             </button>
                         </div>
                     ))
-                )}
-            </div>
-
-            <div className="mt-8 space-y-4">
-                {!isImporting ? (
-                    <>
-                        <form onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                value={newListName}
-                                onChange={(e) => setNewListName(e.target.value)}
-                                placeholder="Create list..."
-                                enterKeyHint="done"
-                                className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors placeholder-gray-400 dark:placeholder-gray-500"
-                            />
-                        </form>
-                        <button
-                            onClick={() => setIsImporting(true)}
-                            className="text-sm text-blue-600 dark:text-blue-400 hover:underline w-full text-center"
-                        >
-                            Or import a list
-                        </button>
-                    </>
-                ) : (
-                    <form onSubmit={handleImport} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <input
-                            type="text"
-                            value={importString}
-                            onChange={(e) => setImportString(e.target.value)}
-                            placeholder="Paste shared list here..."
-                            className="w-full p-3 mb-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                        />
-                        {importError && (
-                            <p className="text-red-500 text-xs mb-3">{importError}</p>
-                        )}
-                        <div className="flex gap-2">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsImporting(false);
-                                    setImportString('');
-                                    setImportError('');
-                                }}
-                                className="flex-1 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={!importString.trim()}
-                                className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Import
-                            </button>
-                        </div>
-                    </form>
                 )}
             </div>
         </div>
