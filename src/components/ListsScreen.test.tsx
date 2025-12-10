@@ -15,6 +15,7 @@ describe('ListsScreen', () => {
         onAddList: vi.fn(),
         onDeleteList: vi.fn(),
         onSelectList: vi.fn(),
+        onImportList: vi.fn(),
     };
 
     beforeEach(() => {
