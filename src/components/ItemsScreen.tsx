@@ -5,14 +5,12 @@ interface ItemsScreenProps {
     activeList: TodoList | null;
     onAddItem: (text: string) => void;
     onToggleItem: (itemId: string) => void;
-    onDeleteCompleted: () => void;
 }
 
 export function ItemsScreen({
     activeList,
     onAddItem,
     onToggleItem,
-    onDeleteCompleted,
 }: ItemsScreenProps) {
     const [newItemText, setNewItemText] = useState('');
 
@@ -38,7 +36,7 @@ export function ItemsScreen({
         );
     }
 
-    const completedCount = activeList.items.filter(i => i.completed).length;
+
 
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full">
@@ -82,18 +80,6 @@ export function ItemsScreen({
                 )}
             </div>
 
-            {completedCount > 0 && (
-                <button
-                    onClick={() => {
-                        if (window.confirm(`Are you sure you want to remove ${completedCount} completed item${completedCount !== 1 ? 's' : ''}?`)) {
-                            onDeleteCompleted();
-                        }
-                    }}
-                    className="w-full py-3 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg font-medium transition-colors border border-red-100 dark:border-red-900/30"
-                >
-                    Remove {completedCount} Checked Item{completedCount !== 1 ? 's' : ''}
-                </button>
-            )}
         </div>
     );
 }
