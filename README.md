@@ -10,6 +10,8 @@ A minimal, mobile-first Todo List PWA built with React, TypeScript, and Tailwind
 *   **Mobile-First Design**: Optimized for touch interactions and mobile screens.
 *   **PWA Support**: Installable on iOS and Android. Works offline.
 *   **Multiple Lists**: Organize your tasks into separate lists.
+*   **Snooze Items**: Temporarily hide completed items for 1 hour to declutter your view.
+*   **Share Lists**: Export and import lists using a simple encoded string.
 *   **Alphabetical Sorting**: Lists and items are automatically sorted for you.
 *   **Persistence**: Data is saved automatically to your device's local storage.
 *   **Dark Mode**: Automatic device-driven dark mode support.

@@ -99,6 +99,26 @@ export function useTodoApp() {
         }));
     };
 
+    const snoozeCompletedItems = (durationMs: number) => {
+        if (!state.activeListId) return;
+        const snoozeTime = Date.now() + durationMs;
+        setState(prev => ({
+            ...prev,
+            lists: prev.lists.map(list =>
+                list.id === prev.activeListId
+                    ? {
+                        ...list,
+                        items: list.items.map(item =>
+                            item.completed
+                                ? { ...item, completed: false, snoozedUntil: snoozeTime }
+                                : item
+                        )
+                    }
+                    : list
+            )
+        }));
+    };
+
     const importList = (list: TodoList) => {
         // Generate a new ID to avoid collisions if importing the same list multiple times
         const newList = { ...list, id: crypto.randomUUID() };
@@ -114,7 +134,12 @@ export function useTodoApp() {
 
     const activeList = state.lists.find(l => l.id === state.activeListId) || null;
     const sortedActiveList = activeList
-        ? { ...activeList, items: [...activeList.items].sort((a, b) => a.text.localeCompare(b.text)) }
+        ? {
+            ...activeList,
+            items: [...activeList.items]
+                .filter(item => !item.snoozedUntil || item.snoozedUntil < Date.now())
+                .sort((a, b) => a.text.localeCompare(b.text))
+        }
         : null;
 
     return {
@@ -127,6 +152,7 @@ export function useTodoApp() {
         addItem,
         toggleItem,
         deleteCompletedItems,
+        snoozeCompletedItems,
         importList
     };
 }
