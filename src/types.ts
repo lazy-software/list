@@ -2,6 +2,7 @@ export interface TodoItem {
     id: string;
     text: string;
     completed: boolean;
+    snoozedUntil?: number;
 }
 
 export interface TodoList {
