@@ -67,7 +67,7 @@ function App() {
               {/* Snooze Button */}
               <button
                 onClick={() => {
-                  if (window.confirm(`Snooze ${completedCount} completed item${completedCount !== 1 ? 's' : ''} for 1 hour?`)) {
+                  if (window.confirm(`Snooze ${completedCount} checked item${completedCount !== 1 ? 's' : ''} for 1 hour?`)) {
                     snoozeCompletedItems(60 * 60 * 1000); // 1 hour
                   }
                 }}
