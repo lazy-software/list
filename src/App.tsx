@@ -1,13 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTodoApp } from './hooks/useTodoApp';
+import { useIncomingShare } from './hooks/useIncomingShare';
 import { BottomNav } from './components/BottomNav';
 import { ListsScreen } from './components/ListsScreen';
 import { ItemsScreen } from './components/ItemsScreen';
+import type { TodoList } from './types';
 import './App.css';
+
+function isComposerTarget(target: EventTarget | null) {
+  return target instanceof HTMLElement && Boolean(target.closest('input, button, label, a, textarea, select'));
+}
 
 function App() {
   const [activeTab, setActiveTab] = useState<'items' | 'lists'>('items');
   const mainRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLInputElement>(null);
+
+  const focusComposer = () => {
+    composerRef.current?.focus();
+  };
 
   useEffect(() => {
     if (mainRef.current) {
@@ -29,21 +40,37 @@ function App() {
     importList
   } = useTodoApp();
 
+  const handleImportList = useCallback((list: TodoList) => {
+    importList(list);
+    setActiveTab('items');
+  }, [importList]);
+
+  useIncomingShare(handleImportList);
+
   return (
     <div className="h-[100dvh] bg-gray-100 dark:bg-gray-950 transition-colors duration-200 flex flex-col overflow-hidden pt-[env(safe-area-inset-top)]">
       <div className="max-w-md mx-auto w-full h-full bg-white dark:bg-gray-900 shadow-2xl relative transition-colors duration-200 flex flex-col overflow-hidden">
 
 
         {/* Main Content */}
-        <main ref={mainRef} className="flex-1 overflow-y-auto pt-4">
+        <main
+          ref={mainRef}
+          className="flex-1 overflow-y-auto pt-4"
+          onClick={(event) => {
+            if (isComposerTarget(event.target)) return;
+            focusComposer();
+          }}
+        >
           {activeTab === 'items' ? (
             <ItemsScreen
+              ref={composerRef}
               activeList={activeList}
               onAddItem={addItem}
               onToggleItem={toggleItem}
             />
           ) : (
             <ListsScreen
+              ref={composerRef}
               lists={lists}
               activeListId={activeListId}
               onAddList={addList}
@@ -51,7 +78,7 @@ function App() {
               onSelectList={(id) => {
                 setActiveList(id);
               }}
-              onImportList={importList}
+              onImportList={handleImportList}
             />
           )}
         </main>
@@ -66,6 +93,9 @@ function App() {
             <div className="absolute right-4 bottom-[calc(6rem+env(safe-area-inset-bottom,20px))] z-50 flex flex-col gap-3 items-end">
               {/* Snooze Button */}
               <button
+                type="button"
+                tabIndex={-1}
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={() => {
                   if (window.confirm(`Snooze ${completedCount} checked item${completedCount !== 1 ? 's' : ''} for 1 hour?`)) {
                     snoozeCompletedItems(60 * 60 * 1000); // 1 hour
@@ -81,6 +111,9 @@ function App() {
 
               {/* Clear Button */}
               <button
+                type="button"
+                tabIndex={-1}
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={() => {
                   if (window.confirm(`Remove ${completedCount} completed item${completedCount !== 1 ? 's' : ''}?`)) {
                     deleteCompletedItems();

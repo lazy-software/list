@@ -156,4 +156,23 @@ describe('useTodoApp', () => {
         // Expect case-insensitive sorting: apple, Banana, cherry
         expect(result.current.activeList?.items.map(i => i.text)).toEqual(['apple', 'Banana', 'cherry']);
     });
+
+    it('imports a shared list with new ids', () => {
+        const { result } = renderHook(() => useTodoApp());
+
+        act(() => {
+            result.current.importList({
+                id: 'shared-id',
+                name: 'Party',
+                items: [{ id: 'item-1', text: 'Ice', completed: false }],
+            });
+        });
+
+        expect(result.current.lists).toHaveLength(1);
+        expect(result.current.lists[0].id).not.toBe('shared-id');
+        expect(result.current.lists[0].name).toBe('Party');
+        expect(result.current.lists[0].items[0].id).not.toBe('item-1');
+        expect(result.current.lists[0].items[0].text).toBe('Ice');
+        expect(result.current.activeListId).toBe(result.current.lists[0].id);
+    });
 });

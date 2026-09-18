@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import type { TodoList } from '../types';
-import { decodeList, encodeList } from '../utils/share';
+import { createShareUrl, parseShareInput } from '../utils/share';
 
 interface ListsScreenProps {
     lists: TodoList[];
@@ -11,18 +11,19 @@ interface ListsScreenProps {
     onImportList: (list: TodoList) => void;
 }
 
-export function ListsScreen({
+export const ListsScreen = forwardRef<HTMLInputElement, ListsScreenProps>(function ListsScreen({
     lists,
     activeListId,
     onAddList,
     onDeleteList,
     onSelectList,
     onImportList,
-}: ListsScreenProps) {
+}, ref) {
     const [newListName, setNewListName] = useState('');
     const [isImporting, setIsImporting] = useState(false);
     const [importString, setImportString] = useState('');
     const [importError, setImportError] = useState('');
+    const [shareNotice, setShareNotice] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,26 +37,39 @@ export function ListsScreen({
         e.preventDefault();
         setImportError('');
 
-        let encoded = importString.trim();
-        if (!encoded) return;
-
-        // Handle full URLs by extracting the data param
-        try {
-            const url = new URL(encoded);
-            const data = url.searchParams.get('data');
-            if (data) encoded = data;
-        } catch (e) {
-            // Not a URL, assume it's the raw data string
-        }
-
-        const list = decodeList(encoded);
+        const list = parseShareInput(importString);
         if (list) {
             onImportList(list);
             setImportString('');
             setIsImporting(false);
-            alert(`Imported list: ${list.name}`);
         } else {
-            setImportError('Invalid. Please check the shared list.');
+            setImportError('Invalid share link.');
+        }
+    };
+
+    const handleShare = async (list: TodoList) => {
+        const url = createShareUrl(list);
+        setShareNotice('');
+
+        if (typeof navigator.share === 'function') {
+            try {
+                await navigator.share({
+                    title: list.name,
+                    url,
+                });
+                return;
+            } catch (error) {
+                if (error instanceof DOMException && error.name === 'AbortError') return;
+            }
+        }
+
+        try {
+            await navigator.clipboard.writeText(url);
+            setShareNotice(`Link copied for "${list.name}"`);
+        } catch {
+            setShareNotice('Could not share automatically. Copy the link from the box below.');
+            setIsImporting(true);
+            setImportString(url);
         }
     };
 
@@ -66,11 +80,13 @@ export function ListsScreen({
                     <>
                         <form onSubmit={handleSubmit}>
                             <input
+                                ref={ref}
                                 type="text"
                                 value={newListName}
                                 onChange={(e) => setNewListName(e.target.value)}
                                 placeholder="Create list..."
-                                enterKeyHint="done"
+                                aria-label="Create list"
+                                enterKeyHint="enter"
                                 className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors placeholder-gray-400 dark:placeholder-gray-500"
                             />
                         </form>
@@ -80,6 +96,9 @@ export function ListsScreen({
                         >
                             Or import a list
                         </button>
+                        {shareNotice && (
+                            <p className="text-sm text-center text-gray-500 dark:text-gray-400">{shareNotice}</p>
+                        )}
                     </>
                 ) : (
                     <form onSubmit={handleImport} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -87,7 +106,8 @@ export function ListsScreen({
                             type="text"
                             value={importString}
                             onChange={(e) => setImportString(e.target.value)}
-                            placeholder="Paste shared list here..."
+                            placeholder="Paste a share link..."
+                            aria-label="Share link"
                             className="w-full p-3 mb-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         />
                         {importError && (
@@ -149,15 +169,13 @@ export function ListsScreen({
                             </label>
 
                             <button
+                                type="button"
                                 onClick={() => {
-                                    const encoded = encodeList(list);
-                                    const url = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-                                    navigator.clipboard.writeText(url).then(() => {
-                                        alert(`Share link for "${list.name}" copied to clipboard!`);
-                                    });
+                                    void handleShare(list);
                                 }}
                                 className="ml-4 p-2 text-gray-400 dark:text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                                 title="Share list"
+                                aria-label={`Share ${list.name}`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -183,4 +201,4 @@ export function ListsScreen({
             </div>
         </div>
     );
-}
+});

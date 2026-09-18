@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { AppState, TodoList, TodoItem } from '../types';
+import { cloneListForImport } from '../utils/share';
 
 const STORAGE_KEY = 'todo-app-data';
 
@@ -120,8 +121,7 @@ export function useTodoApp() {
     };
 
     const importList = (list: TodoList) => {
-        // Generate a new ID to avoid collisions if importing the same list multiple times
-        const newList = { ...list, id: crypto.randomUUID() };
+        const newList = cloneListForImport(list);
 
         setState(prev => ({
             ...prev,
