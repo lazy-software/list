@@ -1,7 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ListsScreen } from './ListsScreen';
 import type { TodoList } from '../types';
+import { createShareUrl, encodeList } from '../utils/share';
 
 describe('ListsScreen', () => {
     const mockLists: TodoList[] = [
@@ -53,5 +54,60 @@ describe('ListsScreen', () => {
         expect(defaultProps.onDeleteList).not.toHaveBeenCalled();
 
         confirmSpy.mockRestore();
+    });
+
+    it('shares a list with the system share sheet', async () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        vi.stubGlobal('navigator', { ...window.navigator, share });
+
+        render(<ListsScreen {...defaultProps} />);
+        fireEvent.click(screen.getByLabelText('Share Groceries'));
+
+        await waitFor(() => {
+            expect(share).toHaveBeenCalled();
+        });
+        expect(share.mock.calls[0][0].url).toContain('?data=');
+        expect(share.mock.calls[0][0].title).toBe('Groceries');
+        expect(share.mock.calls[0][0].text).toBeUndefined();
+
+        vi.unstubAllGlobals();
+    });
+
+    it('imports a pasted share link', () => {
+        const shared: TodoList = {
+            id: 'shared',
+            name: 'Party',
+            items: [{ id: '1', text: 'Ice', completed: false }],
+        };
+
+        render(<ListsScreen {...defaultProps} />);
+        fireEvent.click(screen.getByText('Or import a list'));
+        fireEvent.change(screen.getByLabelText('Share link'), {
+            target: { value: createShareUrl(shared, { origin: 'https://list.lazy.software', pathname: '/' }) },
+        });
+        fireEvent.submit(screen.getByLabelText('Share link').closest('form')!);
+
+        expect(defaultProps.onImportList).toHaveBeenCalledWith(
+            expect.objectContaining({ name: 'Party' }),
+        );
+    });
+
+    it('imports a pasted share code', () => {
+        const shared: TodoList = {
+            id: 'shared',
+            name: 'Party',
+            items: [{ id: '1', text: 'Ice', completed: false }],
+        };
+
+        render(<ListsScreen {...defaultProps} />);
+        fireEvent.click(screen.getByText('Or import a list'));
+        fireEvent.change(screen.getByLabelText('Share link'), {
+            target: { value: encodeList(shared) },
+        });
+        fireEvent.submit(screen.getByLabelText('Share link').closest('form')!);
+
+        expect(defaultProps.onImportList).toHaveBeenCalledWith(
+            expect.objectContaining({ name: 'Party' }),
+        );
     });
 });

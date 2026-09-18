@@ -17,6 +17,12 @@ export default defineConfig({
         theme_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
+        id: '/',
+        launch_handler: {
+          client_mode: ['navigate-existing', 'auto']
+        },
         icons: [
           {
             src: 'icon-192.png',
