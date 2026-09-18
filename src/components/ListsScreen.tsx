@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import type { TodoList } from '../types';
 import { decodeList, encodeList } from '../utils/share';
 
@@ -11,14 +11,14 @@ interface ListsScreenProps {
     onImportList: (list: TodoList) => void;
 }
 
-export function ListsScreen({
+export const ListsScreen = forwardRef<HTMLInputElement, ListsScreenProps>(function ListsScreen({
     lists,
     activeListId,
     onAddList,
     onDeleteList,
     onSelectList,
     onImportList,
-}: ListsScreenProps) {
+}, ref) {
     const [newListName, setNewListName] = useState('');
     const [isImporting, setIsImporting] = useState(false);
     const [importString, setImportString] = useState('');
@@ -66,11 +66,13 @@ export function ListsScreen({
                     <>
                         <form onSubmit={handleSubmit}>
                             <input
+                                ref={ref}
                                 type="text"
                                 value={newListName}
                                 onChange={(e) => setNewListName(e.target.value)}
                                 placeholder="Create list..."
-                                enterKeyHint="done"
+                                aria-label="Create list"
+                                enterKeyHint="enter"
                                 className="w-full p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors placeholder-gray-400 dark:placeholder-gray-500"
                             />
                         </form>
@@ -183,4 +185,4 @@ export function ListsScreen({
             </div>
         </div>
     );
-}
+});
